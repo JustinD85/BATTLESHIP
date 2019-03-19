@@ -5,8 +5,11 @@ require './lib/ship'
 require './lib/board'
 
 class BoardTest < Minitest::Test
-  attr_reader :board
+  attr_reader :board, :submarine, :cruiser
+
   def setup
+    @cruiser = Ship.new("Cruiser", 3)
+    @submarine = Ship.new("Submarine", 2)
     @board = Board.new
   end
 
@@ -23,5 +26,18 @@ class BoardTest < Minitest::Test
     board.cells.values.each do |cell|
       assert_instance_of Cell, cell
     end
+  end
+
+  def test_it_can_determine_valid_coordinates
+    assert board.valid_coordinate?("A1")
+    assert board.valid_coordinate?("D4")
+
+    refute board.valid_coordinate?("A5")
+    refute board.valid_coordinate?("A0")
+  end
+
+  def test_it_validates_coordinate_length_matches_ship_length
+    refute board.valid_placement?(cruiser, ["A1","A2"])
+    refute board.valid_placement?(submarine, ["A1", "A2", "A3"])
   end
 end

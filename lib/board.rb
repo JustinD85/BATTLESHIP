@@ -17,4 +17,15 @@ class Board
     end
     board_hash
   end
+
+  def valid_coordinate?(coord)
+    @cells.any? { |key, value| key == coord }
+  end
+
+  def valid_placement?(ship, coord)
+    coord.length == ship.length
+  end
+
+
+
 end
