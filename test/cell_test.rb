@@ -35,4 +35,22 @@ class CellTest < Minitest::Test
     cell.place_ship(cruiser)
     refute cell.empty?
   end
+
+  def test_it_not_fired_upon_by_default
+    cell.place_ship(cruiser)
+    refute cell.fired_upon?
+  end
+
+  def test_it_can_be_fired_upon
+    cell.place_ship(cruiser)
+    cell.fire_upon
+    assert cell.fired_upon?
+  end
+
+  def test_the_ship_inside_cell_lost_health_after_fired_upon
+    cell.place_ship(cruiser)
+    cell.fire_upon
+    assert_equal 2, cell.ship.health
+  end
+
 end
