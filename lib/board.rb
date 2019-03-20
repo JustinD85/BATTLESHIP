@@ -35,7 +35,8 @@ class Board
                     (coord.first[0]..coord.last[0]).to_a.length == ship.length
 
     #all cells must be within the boards range
-    valid = false if  coord.any? { |item| !valid_coordinate?(item) }
+    valid = false if coord.any? { |item| !valid_coordinate?(item) } ||
+                     coord.any? { |item| !@cells[item].empty?}
 
     valid
   end
