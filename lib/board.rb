@@ -23,9 +23,21 @@ class Board
   end
 
   def valid_placement?(ship, coord)
-     coord.length == ship.length
-  end
+    valid = false 
+    #Rationale: If none of the horizontal || vertical rules apply, then not valid
 
-  
+    #rules to place horizontally: letter same, sequintial nums == ship length
+    valid = true if coord.all? { |item| item[0] == coord.first[0] } &&
+                     (coord.first[1]..coord.last[1]).to_a.length == ship.length
+
+    #rules to place vertically: number same,  sequintial letters == ship.length
+    valid = true if coord.all? { |item| item[1] == coord.first[1] } &&
+                    (coord.first[0]..coord.last[0]).to_a.length == ship.length
+
+    #all cells must be within the boards range
+    valid = false if  coord.any? { |item| !valid_coordinate?(item) }
+
+    valid
+  end
 
 end
