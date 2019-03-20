@@ -23,7 +23,8 @@ class Board
   end
 
   def valid_placement?(ship, coord)
-    valid = false 
+    #test comment for figuring out github branches
+    valid = false
     #Rationale: If none of the horizontal || vertical rules apply, then not valid
 
     #rules to place horizontally: letter same, sequintial nums == ship length
