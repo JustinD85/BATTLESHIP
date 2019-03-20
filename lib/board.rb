@@ -23,7 +23,7 @@ class Board
   end
 
   def valid_placement?(ship, coord)
-    valid = false 
+    valid = false
     #Rationale: If none of the horizontal || vertical rules apply, then not valid
 
     #rules to place horizontally: letter same, sequintial nums == ship length
@@ -40,4 +40,11 @@ class Board
     valid
   end
 
+  def place(ship, coord)
+    if valid_placement?(ship, coord)
+      coord.each do |item|
+        cells[item].place_ship(ship)
+      end
+    end
+  end
 end

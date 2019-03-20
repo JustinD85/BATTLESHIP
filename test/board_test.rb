@@ -58,4 +58,15 @@ class BoardTest < Minitest::Test
     assert board.valid_placement?(cruiser, ["B1", "C1", "D1"])
     assert board.valid_placement?(submarine, ["A1", "A2"])
   end
+
+  def test_it_can_place_a_ship_on_valid_coordinates
+    board.place(cruiser, ["B1", "C1", "D1"])
+    assert_instance_of Ship, board.cells["B1"].ship
+    assert_instance_of Ship, board.cells["C1"].ship
+    assert_instance_of Ship, board.cells["D1"].ship
+
+    assert_equal board.cells["D1"].ship, board.cells["C1"].ship
+    assert_equal board.cells["B1"].ship, board.cells["D1"].ship
+    assert_nil board.cells["A1"].ship
+  end
 end
