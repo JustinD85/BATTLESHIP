@@ -49,4 +49,22 @@ class Board
       end
     end
   end
+
+  def render(show_ship = false)
+    board = " 1 2 3 4"
+    letter_arr = ['A', 'B', 'C', 'D']
+    @cells.each_with_index do |(coord, cell), i|
+      if i % 4  == 0
+        board << " \n"
+        board << letter_arr[0]
+        letter_arr.shift
+      end
+
+      if (i % 4) + 1 != 0
+        board << " "
+      end
+      board << cell.render(show_ship)
+    end
+    board << " \n"
+  end
 end
