@@ -51,16 +51,20 @@ class Board
   end
 
   def render
-    board = " 1 2 3 4 "
-    letter_arr = ['A ', 'B ', 'C ', 'D ']
+    board = " 1 2 3 4"
+    letter_arr = ['A', 'B', 'C', 'D']
     @cells.each_with_index do |(coord, cell), i|
       if i % 4  == 0
         board << " \n"
         board << letter_arr[0]
         letter_arr.shift
       end
-      board << cell.render << ' '
+
+      if (i % 4) + 1 != 0
+        board << " "
+      end
+      board << cell.render
     end
-    board
+    board << " \n"
   end
 end
