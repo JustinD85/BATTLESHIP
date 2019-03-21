@@ -76,4 +76,10 @@ class BoardTest < Minitest::Test
     refute board.valid_placement?(submarine, ["D1", "D2"])
     assert board.valid_placement?(submarine, ["A1", "A2"])
   end
+
+  def test_it_can_render_correctly
+    expected = " 1 2 3 4 \nA . . . . \nB . . . . \nC . . . . \nD . . . . \n"
+    actual = board.render
+    assert_equal expected, actual
+  end
 end
