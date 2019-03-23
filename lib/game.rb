@@ -52,21 +52,30 @@ class Game
     print @player_board.render(true)
   end
 
+  def play_game
+    until @game_over
+      system("clear")
+      print "#{'=' * 10 } COMPUTER BOARD #{'=' * 10} \n"
+      print @computer_board.render
+
+      print "#{'=' * 10 } PLAYER BOARD #{'=' * 10} \n"
+      print @player_board.render(true)
+
+      gets.chomp
+    end
+  end
+
   def start
     system("clear")
     p "Welcome to BattleShip"
-    until @game_over
       p "Enter p to play. Enter q to quit."
-      
       case gets.chomp
       when "q"
         @game_over = true
       when "p"
-        p "You are playing the game!"
         computer_placement
         player_placement
+        play_game
       end
-    end
-
   end
 end
