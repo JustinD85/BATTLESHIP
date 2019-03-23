@@ -57,6 +57,9 @@ class BoardTest < Minitest::Test
   def test_it_validates_coornates_are_good
     assert board.valid_placement?(cruiser, ["B1", "C1", "D1"])
     assert board.valid_placement?(submarine, ["A1", "A2"])
+    #Issue #11 fix
+    refute board.valid_placement?(cruiser, ["B1", "B4", "B3"])
+    refute board.valid_placement?(cruiser, ["A1", "D1", "C1"])
   end
 
   def test_it_can_place_a_ship_on_valid_coordinates
