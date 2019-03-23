@@ -20,7 +20,7 @@ class Game
   end
 
   def computer_placement
-    [Ship.new("Cruiser", 2), Ship.new("Submarine", 3)].each do |ship| 
+    [Ship.new("Cruiser", 2), Ship.new("Submarine", 3)].each do |ship|
       until @computer_board.place(ship, coordinate_randomizer(ship))
       end
     end
@@ -31,7 +31,7 @@ class Game
 
     until valid_coord
       coords = gets.chomp.split
-      
+
       if (coords.all? { |coord| coord.split("").length == 2 })
         return coords.map { |coord| coord.upcase}
       else
@@ -61,16 +61,38 @@ class Game
     print @player_board.render(true)
   end
 
+  def feedback(board, coord)
+    if !@computer_board.cells[coord].empty?
+      if @computer_board.cells[coord].ship.sunk?
+        "Sunk!"
+
+      else
+        "Hit!"
+      end
+    else
+      "Miss!"
+    end
+  end
+
   def attempt_fire_on_computer_ship
     is_valid_coordinate = false
     coord = ''
     until is_valid_coordinate
-      coord = gets.chomp.upcase!
+      coord = gets.chomp.upcase
       is_valid_coordinate = @computer_board.valid_coordinate?(coord)
-      print "Please enter valid coordinates"
+      print "Please enter valid coordinates: " if !is_valid_coordinate
     end
     @computer_board.cells[coord].fire_upon
+    puts feedback(@computer_board, coord)
+    sleep(1.5)
   end
+
+  def take_turn
+    print "Enter the coordinate for your shot:"
+
+    attempt_fire_on_computer_ship
+  end
+
   def play_game
     until @game_over
       system("clear")
@@ -80,9 +102,7 @@ class Game
       print "#{'=' * 10 } PLAYER BOARD #{'=' * 10} \n"
       print @player_board.render(true)
 
-      print "Enter the coordinate for your shot:"
-
-      attempt_fire_on_computer_ship
+      take_turn
     end
   end
 
