@@ -58,7 +58,7 @@ class Board
   end
 
   def render(show_ship = false)
-    board = " 1 2 3 4"
+    board = "  1 2 3 4"
     letter_arr = ['A', 'B', 'C', 'D']
     @cells.each_with_index do |(coord, cell), i|
       if i % 4  == 0

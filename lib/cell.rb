@@ -33,7 +33,7 @@ class Cell
     elsif fired_upon? && !empty?
       "H"
     elsif should_show && @ship
-        "S"
+      "S"
     else
       "."
     end

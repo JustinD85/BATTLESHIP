@@ -80,7 +80,6 @@ class Game
     coord = valid_range.shift
     until !@player_board.cells[valid_range.first].fired_upon?
       coord = valid_range.shift
-      p coord
       valid_range.shuffle!
     end
     @player_board.cells[coord].fire_upon
