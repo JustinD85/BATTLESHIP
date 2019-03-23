@@ -27,9 +27,18 @@ class Game
   end
 
   def convert_input_to_coords()
-    coords = gets.chomp.split
-    coords.each { |coord| coord.upcase! }
-    coords
+    valid_coord = false
+
+    until valid_coord
+      coords = gets.chomp.split
+      
+      if (coords.all? { |coord| coord.split("").length == 2 })
+        return coords.map { |coord| coord.upcase}
+      else
+        print "Please enter valid coordinates! \n"
+      end
+    end
+
   end
 
   def player_placement
@@ -52,6 +61,16 @@ class Game
     print @player_board.render(true)
   end
 
+  def attempt_fire_on_computer_ship
+    is_valid_coordinate = false
+    coord = ''
+    until is_valid_coordinate
+      coord = gets.chomp.upcase!
+      is_valid_coordinate = @computer_board.valid_coordinate?(coord)
+      print "Please enter valid coordinates"
+    end
+    @computer_board.cells[coord].fire_upon
+  end
   def play_game
     until @game_over
       system("clear")
@@ -61,7 +80,9 @@ class Game
       print "#{'=' * 10 } PLAYER BOARD #{'=' * 10} \n"
       print @player_board.render(true)
 
-      gets.chomp
+      print "Enter the coordinate for your shot:"
+
+      attempt_fire_on_computer_ship
     end
   end
 
