@@ -62,8 +62,8 @@ class Game
   end
 
   def feedback(board, coord)
-    if !@computer_board.cells[coord].empty?
-      if @computer_board.cells[coord].ship.sunk?
+    if !board.cells[coord].empty?
+      if board.cells[coord].ship.sunk?
         "Sunk!"
 
       else
@@ -72,6 +72,20 @@ class Game
     else
       "Miss!"
     end
+  end
+
+  def attempt_fire_on_player_ship
+    valid_range = @player_board.cells.keys
+    valid_range.shuffle!
+    coord = valid_range.shift
+    until !@player_board.cells[valid_range.first].fired_upon?
+      coord = valid_range.shift
+      p coord
+      valid_range.shuffle!
+    end
+    @player_board.cells[coord].fire_upon
+    puts feedback(@player_board, coord)
+    sleep(2.5)
   end
 
   def attempt_fire_on_computer_ship
@@ -88,9 +102,31 @@ class Game
   end
 
   def take_turn
-    print "Enter the coordinate for your shot:"
+    print "Enter the coordinate for your shot: "
 
     attempt_fire_on_computer_ship
+    attempt_fire_on_player_ship
+  end
+
+  def check_if_game_over
+    computer_won = @player_board.cells.values.all? do |cell|
+      cell.empty? || cell.ship.sunk?
+    end
+
+    player_won = @computer_board.cells.values.all? do |cell|
+      cell.empty? || cell.ship.sunk?
+    end
+
+    @game_over = true if player_won || computer_won
+
+    if player_won && computer_won
+      p "It's tie"
+    elsif player_won
+      p "Player won"
+    else
+      p "Computer won"
+    end
+
   end
 
   def play_game
@@ -103,7 +139,9 @@ class Game
       print @player_board.render(true)
 
       take_turn
+      check_if_game_over
     end
+    print "Game Over"
   end
 
   def start

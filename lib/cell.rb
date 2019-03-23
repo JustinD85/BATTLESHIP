@@ -25,14 +25,15 @@ class Cell
   end
 
   def render(should_show = false)
-    if should_show && @ship
-      "S"
-    elsif fired_upon? && empty?
+
+    if fired_upon? && empty?
       "M"
     elsif fired_upon? && @ship.sunk?
       "X"
     elsif fired_upon? && !empty?
       "H"
+    elsif should_show && @ship
+        "S"
     else
       "."
     end
