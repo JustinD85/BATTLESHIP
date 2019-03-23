@@ -43,11 +43,14 @@ class Board
   end
 
   def place(ship, coord)
-    if valid_placement?(ship, coord)
+    is_valid = valid_placement?(ship, coord)
+
+    if is_valid
       coord.each do |item|
         cells[item].place_ship(ship)
       end
     end
+    is_valid
   end
 
   def render(show_ship = false)
