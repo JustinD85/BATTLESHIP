@@ -38,6 +38,10 @@ class Board
     valid = false if coord.any? { |item| !valid_coordinate?(item) } ||
                      coord.any? { |item| !@cells[item].empty?}
 
+                     #check for odd middle coordinate
+    if coord.length == 3
+      valid = false if coord[0] > coord[1] || coord[0] == coord[1] || coord[1] == coord[2] || coord[2] < coord[1]
+    end
     valid
     #sal - break this into methods
   end
