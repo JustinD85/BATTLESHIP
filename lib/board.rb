@@ -1,77 +1,82 @@
 require './lib/cell'
 class Board
   attr_reader :cells
-  def initialize
-    @cells = create_cells
+
+  def initialize(range = "A1".."D4")
+    @cells = populate_with_cells(range)
+    @max_board_size = 4
   end
 
-  def create_cells
-    range = "A1".."D4"
-    valid_range = range.select do |coord|
-      coord if coord < "#{coord[0]}5" && coord > "#{coord[0]}0"
+  def populate_with_cells(range)
+    @max_board_size = range.max_by { |coords| coords }[1].to_i
+
+    valid_range = range.select do |coords|
+       coords[1].to_i <= @max_board_size  && !coords.include?("0")
     end
 
     board_hash = {}
-    valid_range.each do |coord|
-      board_hash[coord] = Cell.new(coord)
-    end
+    valid_range.each { |coords| board_hash[coords] = Cell.new(coords) }
     board_hash
   end
 
-  def valid_coordinate?(coord)
-    @cells.any? { |key, value| key == coord }
+  def valid_coordinate?(coords)
+    @cells.any? { |key, value| key == coords }
   end
 
-  def valid_placement?(ship, coord)
+  def valid_horizontal_placement?(coords, ship)
+    coords.all? { |coord| coord[0] == coords.first[0] } &&
+      (coords.first..coords.last).to_a == coords &&
+      coords.length == ship.length
+  end
+
+  def valid_vertical_placement?(coords,ship)
+    letters_in_coords = coords.map { |coord| coord[0] }
+    letters_in_coords_using_range = (coords.first[0]..coords.last[0]).to_a
+
+    coords.all? { |coord| coord[1] == coords.first[1] } &&
+     letters_in_coords == letters_in_coords_using_range
+  end
+
+  def out_of_bounds_or_has_ship_already?(coords)
+    coords.any? { |coord| !valid_coordinate?(coord) } ||
+      coords.any? { |coord| !@cells[coord].empty?}
+  end
+  
+
+  def valid_placement?(ship, coords)
     valid = false
-    #Rationale: If none of the horizontal || vertical rules apply, then not valid
 
-    #rules to place horizontally: letter same, sequintial nums == ship length
-    valid = true if coord.all? { |item| item[0] == coord.first[0] } &&
-                     (coord.first[1]..coord.last[1]).to_a.length == ship.length
+    valid = true if valid_horizontal_placement?(coords, ship)
 
-    #rules to place vertically: number same,  sequintial letters == ship.length
-    valid = true if coord.all? { |item| item[1] == coord.first[1] } &&
-                    (coord.first[0]..coord.last[0]).to_a.length == ship.length
+    valid = true if valid_vertical_placement?(coords,ship)
 
-    #all cells must be within the boards range and not contain ship
-    valid = false if coord.any? { |item| !valid_coordinate?(item) } ||
-                     coord.any? { |item| !@cells[item].empty?}
+    valid = false if out_of_bounds_or_has_ship_already?(coords)
 
-                     #check for odd middle coordinate
-    if coord.length == 3
-      valid = false if coord[0] > coord[1] || coord[0] == coord[1] || coord[1] == coord[2] || coord[2] < coord[1]
-    end
     valid
-    #sal - break this into methods
+ 
   end
 
-  def place(ship, coord)
-    is_valid = valid_placement?(ship, coord)
+  def place(ship, coords)
+    is_valid = valid_placement?(ship, coords)
 
-    if is_valid
-      coord.each do |item|
-        cells[item].place_ship(ship)
-      end
-    end
+    coords.each { |coord| cells[coord].place_ship(ship) } if is_valid
+ 
     is_valid
   end
 
   def render(show_ship = false)
-    board = "  1 2 3 4"
-    letter_arr = ['A', 'B', 'C', 'D']
-    @cells.each_with_index do |(coord, cell), i|
-      if i % 4  == 0
-        board << " \n"
-        board << letter_arr[0]
-        letter_arr.shift
-      end
+    board = " "
+    letter_arr = ("A".."Z").to_a.slice(0,@max_board_size)
 
-      if (i % 4) + 1 != 0
-        board << " "
-      end
+    @max_board_size.times { |num| board += " #{num + 1}" }
+
+    @cells.values.each_with_index do |cell, i|
+
+      board << " \n" << letter_arr.shift if i % @max_board_size  == 0
+      board << " "
       board << cell.render(show_ship)
     end
     board << " \n"
   end
+
 end
