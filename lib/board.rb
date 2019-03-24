@@ -32,7 +32,7 @@ class Board
     letters_in_coords = coords.map { |coord| coord.chr }
     letters_in_coords_using_range = (coords.first.chr..coords.last.chr).to_a
 
-    coords.all? { |coord| coord.chr == coords.first.chr } &&
+    coords.all? { |coord| coord[1] == coords.first[1] } &&
      letters_in_coords == letters_in_coords_using_range
   end
 
