@@ -24,15 +24,15 @@ class Board
   end
 
   def valid_horizontal_placement?(coords)
-    coords.all? { |coord| coord[0] == coords.first[0] } &&
+    coords.all? { |coord| coord.chr == coords.first.chr } &&
       (coords.first..coords.last).to_a == coords
   end
 
   def valid_vertical_placement?(coords)
-    letters_in_coords = coords.map { |coord| coord[0] }
-    letters_in_coords_using_range = (coords.first[0]..coords.last[0]).to_a
+    letters_in_coords = coords.map { |coord| coord.chr }
+    letters_in_coords_using_range = (coords.first.chr..coords.last.chr).to_a
 
-    coords.all? { |coord| coord[1] == coords.first[1] } &&
+    coords.all? { |coord| coord.chr == coords.first.chr } &&
      letters_in_coords == letters_in_coords_using_range
   end
 
@@ -52,6 +52,7 @@ class Board
     valid = false if out_of_bounds_or_has_ship_already?(coords)
 
     valid = false if coords.length != ship.length
+    
     valid
  
   end

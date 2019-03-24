@@ -65,7 +65,6 @@ class Game
     if !board.cells[coord].empty?
       if board.cells[coord].ship.sunk?
         "Sunk!"
-
       else
         "Hit!"
       end
@@ -78,13 +77,12 @@ class Game
     valid_range = @player_board.cells.keys
     valid_range.shuffle!
     coord = valid_range.shift
-    until !@player_board.cells[valid_range.first].fired_upon?
-      coord = valid_range.shift
-      valid_range.shuffle!
+    until !@player_board.cells[coord].fired_upon?
+     coord = valid_range.shift
     end
     @player_board.cells[coord].fire_upon
     puts feedback(@player_board, coord)
-    sleep(2.5)
+    sleep(0.5)
   end
 
   def attempt_fire_on_computer_ship
@@ -97,7 +95,7 @@ class Game
     end
     @computer_board.cells[coord].fire_upon
     puts feedback(@computer_board, coord)
-    sleep(1.5)
+    sleep(0.5)
   end
 
   def take_turn
@@ -122,7 +120,7 @@ class Game
       p "It's tie"
     elsif player_won
       p "Player won"
-    else
+    elsif computer_won
       p "Computer won"
     end
 
