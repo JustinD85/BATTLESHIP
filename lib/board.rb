@@ -23,13 +23,12 @@ class Board
     @cells.any? { |key, value| key == coords }
   end
 
-  def valid_horizontal_placement?(coords, ship)
+  def valid_horizontal_placement?(coords)
     coords.all? { |coord| coord[0] == coords.first[0] } &&
-      (coords.first..coords.last).to_a == coords &&
-      coords.length == ship.length
+      (coords.first..coords.last).to_a == coords
   end
 
-  def valid_vertical_placement?(coords,ship)
+  def valid_vertical_placement?(coords)
     letters_in_coords = coords.map { |coord| coord[0] }
     letters_in_coords_using_range = (coords.first[0]..coords.last[0]).to_a
 
@@ -46,12 +45,13 @@ class Board
   def valid_placement?(ship, coords)
     valid = false
 
-    valid = true if valid_horizontal_placement?(coords, ship)
+    valid = true if valid_horizontal_placement?(coords)
 
-    valid = true if valid_vertical_placement?(coords,ship)
+    valid = true if valid_vertical_placement?(coords)
 
     valid = false if out_of_bounds_or_has_ship_already?(coords)
 
+    valid = false if coords.length != ship.length
     valid
  
   end
