@@ -38,20 +38,27 @@ class Board
     valid = false if coord.any? { |item| !valid_coordinate?(item) } ||
                      coord.any? { |item| !@cells[item].empty?}
 
+                     #check for odd middle coordinate
+    if coord.length == 3
+      valid = false if coord[0] > coord[1] || coord[0] == coord[1] || coord[1] == coord[2] || coord[2] < coord[1]
+    end
     valid
     #sal - break this into methods
   end
 
   def place(ship, coord)
-    if valid_placement?(ship, coord)
+    is_valid = valid_placement?(ship, coord)
+
+    if is_valid
       coord.each do |item|
         cells[item].place_ship(ship)
       end
     end
+    is_valid
   end
 
   def render(show_ship = false)
-    board = " 1 2 3 4"
+    board = "  1 2 3 4"
     letter_arr = ['A', 'B', 'C', 'D']
     @cells.each_with_index do |(coord, cell), i|
       if i % 4  == 0
