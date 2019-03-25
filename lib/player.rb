@@ -51,7 +51,7 @@ class Player
   end
 
   def already_shot_at_location?(coord)
-    @board.cells[coord].fired_upon?
+    @board.valid_coordinate?(coord) && @board.cells[coord].fired_upon?
   end
 
 end
