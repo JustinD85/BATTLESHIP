@@ -1,7 +1,7 @@
-require './lib/board'
+ require './lib/board'
 
 class Player
-  attr_reader :name, :board
+  attr_reader :board
 
   def initialize
     @board =  Board.new
@@ -17,8 +17,8 @@ class Player
   end
 
   def fire_upon?(player, coord)
-    good_coord = !@board.cells[coord].fired_upon? &&
-                 @board.valid_coordinate?(coord)
+    good_coord =  @board.valid_coordinate?(coord) &&
+                  !@board.cells[coord].fired_upon?
 
     player.receive_fire(coord) if good_coord
 
@@ -32,4 +32,22 @@ class Player
   def ship_name(coord)
     @board.cells[coord].ship.name
   end
+
+  def status_of_cell(coord)
+    cell = @board.cells[coord]
+
+    if !cell.empty? && cell.ship.sunk?
+      :sunk
+    elsif !cell.empty?
+      :hit
+    else
+      :missed
+    end
+
+  end
+
+  def all_ships_sunk?
+    @board.cells.values.all?{ |cell| cell.empty? || cell.ship.sunk? }
+  end
+
 end
