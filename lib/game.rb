@@ -103,14 +103,7 @@ class Game
     @player_board.cells[coord].fire_upon
     sleep 2
     render_playspace
-    case feedback(@player_board, coord)
-    when :hit
-      p "I hit one of your ships!"
-    when :missed
-      p "I Missed!"
-    when :sunk
-      p "I Sunk your #{@player_board.cells[coord].ship.name}!"
-    end
+    puts "I #{feedback(@player_board, coord).to_s} your ship"
     sleep(2)
     render_playspace
   end
@@ -125,14 +118,7 @@ class Game
     end
     @computer_board.cells[coord].fire_upon
     render_playspace
-    case feedback(@computer_board, coord)
-    when :hit
-      p "You Hit one of my ships!"
-    when :missed
-      p "You Missed!"
-    when :sunk
-      p "You Sunk my #{@computer_board.cells[coord].ship.name}!"
-    end
+    puts "You #{feedback(@computer_board, coord).to_s} my ship"
     sleep(2)
 
   end
