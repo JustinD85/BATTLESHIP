@@ -114,7 +114,13 @@ class Game
     until is_valid_coordinate
       coord = gets.chomp.upcase
       is_valid_coordinate = @computer_board.valid_coordinate?(coord) && !@computer_board.cells[coord].fired_upon?
-      print "Please enter valid coordinates: " if !is_valid_coordinate
+      if !@computer_board.cells[coord].nil?
+        if @computer_board.cells[coord].fired_upon?
+          print "You've already shot there. Please enter another coordinate: "
+        end
+      else
+        print "Please enter a valid coordinate: "
+      end
     end
     @computer_board.cells[coord].fire_upon
     render_playspace
