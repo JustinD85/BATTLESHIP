@@ -21,7 +21,6 @@ class Game
     print @player.show_board(true)
   end
 
-
   def computer_placement
     ships = [Ship.new("Cruiser", 2), Ship.new("Submarine", 3)]
     @computer.theorize_and_place_ships(ships)
@@ -39,7 +38,6 @@ class Game
         print "Please enter valid coordinates! \n"
       end
     end
- 
   end
 
   def player_placement
@@ -80,11 +78,11 @@ class Game
     sleep 2
 
     render_playspace
-    
+
     sleep(0.5)
     puts "I #{@computer.survey_battlefield} your ship"
     sleep(2)
-    
+
     render_playspace
   end
 
@@ -92,20 +90,18 @@ class Game
     coord = gets.chomp.upcase
 
     until @player.fire_upon?(@computer, coord)
-      coord = gets.chomp.upcase
-      
-      if !@computer.already_shot_at_location?(coord)
+
+      if @computer.already_shot_at_location?(coord)
           print "You've already shot there. Please enter another coordinate: "
       else
         print "Please enter a valid coordinate: "
       end
-      
+      coord = gets.chomp.upcase
     end
-    
+
     render_playspace
     puts "You #{@computer.status_of_cell(coord)} my ship"
     sleep(2)
-
   end
 
   def take_turn
@@ -132,7 +128,6 @@ class Game
       p "Computer won!"
       sleep(6)
     end
-    
   end
 
   def restart_game
@@ -154,10 +149,10 @@ class Game
 
   def start
     system("clear")
-    
+
     p "Welcome to BattleShip!"
     input = ''
-    
+
     until input == "p" || input == "q"
       p "Please enter p to play a game, or q to quit"
       input = gets.chomp.downcase
@@ -168,5 +163,4 @@ class Game
       end
     end
   end
-    
 end

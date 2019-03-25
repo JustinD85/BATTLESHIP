@@ -1,4 +1,5 @@
 require './lib/cell'
+
 class Board
   attr_reader :cells
 
@@ -40,7 +41,6 @@ class Board
     coords.any? { |coord| !valid_coordinate?(coord) } ||
       coords.any? { |coord| !@cells[coord].empty?}
   end
-  
 
   def valid_placement?(ship, coords)
     valid = false
@@ -52,16 +52,16 @@ class Board
     valid = false if out_of_bounds_or_has_ship_already?(coords)
 
     valid = false if coords.length != ship.length
-    
+
     valid
- 
+
   end
 
   def place(ship, coords)
     is_valid = valid_placement?(ship, coords)
 
     coords.each { |coord| cells[coord].place_ship(ship) } if is_valid
- 
+
     is_valid
   end
 
