@@ -1,26 +1,27 @@
 require './lib/ship'
 require './lib/cell'
 require './lib/board'
+require './lib/player'
 
 class Game
 
   def initialize
     @game_over = false
-    @computer_board = Board.new
-    @player_board = Board.new
+    @player = Player.new
+    @computer = Player.new
   end
 
   def render_playspace
     system("clear")
     print "#{'=' * 10 } COMPUTER BOARD #{'=' * 10} \n"
-    print @computer_board.render
+    print @computer.show_board
 
     print "#{'=' * 10 } PLAYER BOARD #{'=' * 10} \n"
-    print @player_board.render(true)
+    print @player.show_board(true)
   end
 
   def coordinate_randomizer(ship)
-    cells = @computer_board.cells.keys
+    cells = @computer.cells.keys
     new_coords = []
     ship.length.times do |x|
       new_coords << cells.shuffle.shift
@@ -29,8 +30,10 @@ class Game
   end
 
   def computer_placement
-    [Ship.new("Cruiser", 2), Ship.new("Submarine", 3)].each do |ship|
-      until @computer_board.place(ship, coordinate_randomizer(ship))
+    ships = [Ship.new("Cruiser", 2), Ship.new("Submarine", 3)]
+
+    ships.each do |ship|
+      until @computer.place_ship?(ship, coordinate_randomizer(ship))
       end
     end
   end
@@ -63,16 +66,16 @@ class Game
     p "Remember: The Submarine is three units long and the Cruiser is two units long."
     sleep 3
     p "Here's what your board will look like:"
-    print @player_board.render
+    print @player.show_board
 
     p "Enter the squares for your Submarine (3 spaces):"
-    until @player_board.place(Ship.new("Cruiser", 3),convert_input_to_coords )
+    until @player.place_ship?(Ship.new("Cruiser", 3), convert_input_to_coords )
       p "Those are invalid coordinates. Please try again:"
       p "Enter the squares for the Cruiser (3 spaces):"
     end
 
     p "Enter the squares for your Cruiser (2 spaces):"
-    until @player_board.place(Ship.new("Submarine",2), convert_input_to_coords)
+    until @player.place_ship(Ship.new("Submarine",2), convert_input_to_coords)
       p "Those are invalid coordinates. Please try again:"
     end
     render_playspace
@@ -93,45 +96,44 @@ class Game
   end
 
   def attempt_fire_on_player_ship
-    valid_range = @player_board.cells.keys
+    valid_range = @player.cells.keys
     valid_range.shuffle!
     coord = valid_range.shift
-    until !@player_board.cells[coord].fired_upon?
+    until !@player.cells[coord].fired_upon?
      coord = valid_range.shift
     end
     puts "Now it's my turn!"
-    @player_board.cells[coord].fire_upon
+    @player.cells[coord].fire_upon
     sleep 2
     render_playspace
-    case feedback(@player_board, coord)
+    case feedback(@player, coord)
     when :hit
       p "I hit one of your ships!"
     when :missed
       p "I Missed!"
     when :sunk
-      p "I Sunk your #{@player_board.cells[coord].ship.name}!"
+      p "I Sunk your #{@player.cells[coord].ship.name}!"
     end
     sleep(2)
     render_playspace
   end
 
   def attempt_fire_on_computer_ship
-    is_valid_coordinate = false
-    coord = ''
-    until is_valid_coordinate
+    coord = gets.chomp.upcase
+
+    until @player.fire_upon?(@computer, coord)
       coord = gets.chomp.upcase
-      is_valid_coordinate = @computer_board.valid_coordinate?(coord) && !@computer_board.cells[coord].fired_upon?
-      print "Please enter valid coordinates: " if !is_valid_coordinate
+      print "Please enter valid coordinates: "
     end
-    @computer_board.cells[coord].fire_upon
     render_playspace
-    case feedback(@computer_board, coord)
+
+    case feedback(@computer, coord)
     when :hit
       p "You Hit one of my ships!"
     when :missed
       p "You Missed!"
     when :sunk
-      p "You Sunk my #{@computer_board.cells[coord].ship.name}!"
+      p "You Sunk my #{@computer.cells[coord].ship.name}!"
     end
     sleep(2)
 
@@ -147,11 +149,11 @@ class Game
   end
 
   def check_if_game_over
-    computer_won = @player_board.cells.values.all? do |cell|
+    computer_won = @player.cells.values.all? do |cell|
       cell.empty? || cell.ship.sunk?
     end
 
-    player_won = @computer_board.cells.values.all? do |cell|
+    player_won = @computer.cells.values.all? do |cell|
       cell.empty? || cell.ship.sunk?
     end
 
@@ -168,9 +170,11 @@ class Game
   end
 
   def play_game
+    computer_placement
+    player_placement
+
     until @game_over
       render_playspace
-
       take_turn
       check_if_game_over
     end
@@ -185,8 +189,6 @@ class Game
       when "q"
         @game_over = true
       when "p"
-        computer_placement
-        player_placement
         play_game
       end
   end
