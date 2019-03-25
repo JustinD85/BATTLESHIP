@@ -50,4 +50,8 @@ class Player
     @board.cells.values.all?{ |cell| cell.empty? || cell.ship.sunk? }
   end
 
+  def already_shot_at_location?(coord)
+    @board.cells[coord].fired_upon?
+  end
+
 end
