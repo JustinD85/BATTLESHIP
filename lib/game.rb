@@ -29,7 +29,7 @@ class Game
   end
 
   def computer_placement
-    [Ship.new("Submarine", 2), Ship.new("Cruiser", 3)].each do |ship|
+    [Ship.new("Cruiser", 2), Ship.new("Submarine", 3)].each do |ship|
       until @computer_board.place(ship, coordinate_randomizer(ship))
       end
     end
