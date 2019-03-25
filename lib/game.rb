@@ -96,9 +96,8 @@ class Game
     valid_range = @player_board.cells.keys
     valid_range.shuffle!
     coord = valid_range.shift
-    until !@player_board.cells[valid_range.first].fired_upon?
-      coord = valid_range.shift
-      valid_range.shuffle!
+    until !@player_board.cells[coord].fired_upon?
+     coord = valid_range.shift
     end
     puts "Now it's my turn!"
     @player_board.cells[coord].fire_upon
@@ -135,6 +134,7 @@ class Game
       p "You Sunk my #{@computer_board.cells[coord].ship.name}!"
     end
     sleep(2)
+
   end
 
   def take_turn
@@ -161,7 +161,7 @@ class Game
       p "It's tie"
     elsif player_won
       p "Player won"
-    else
+    elsif computer_won
       p "Computer won"
     end
 
