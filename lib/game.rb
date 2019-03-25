@@ -62,7 +62,7 @@ class Game
       p "Those are invalid coordinates. Please try again:"
       p "Enter the squares for the Cruiser (3 spaces):"
     end
-    print @player_board.render(true)
+    print @player.show_board(true)
 
     p "Enter the squares for your Cruiser (2 spaces):"
     until @player.place_ship?(Ship.new("Submarine",2), convert_input_to_coords)
