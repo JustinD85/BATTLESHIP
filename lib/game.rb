@@ -10,6 +10,15 @@ class Game
     @player_board = Board.new
   end
 
+  def render_playspace
+    system("clear")
+    print "#{'=' * 10 } COMPUTER BOARD #{'=' * 10} \n"
+    print @computer_board.render
+
+    print "#{'=' * 10 } PLAYER BOARD #{'=' * 10} \n"
+    print @player_board.render(true)
+  end
+
   def coordinate_randomizer(ship)
     cells = @computer_board.cells.keys
     new_coords = []
@@ -42,34 +51,44 @@ class Game
   end
 
   def player_placement
-    p "I have laid out my ships on the grid"
+    system 'clear'
+    p "I'm going to lay out my ships now"
+    7.times do
+      print '.'
+      sleep 0.5
+    end
+    puts 'Done!'
+    sleep 1
     p "You now need to lay out your ships"
-    p "The Cruiser is two units long and the Submarine is three units long."
+    p "Remember: The Submarine is three units long and the Cruiser is two units long."
+    sleep 3
+    p "Here's what your board will look like:"
     print @player_board.render
 
-    p "Enter the squares for the Cruiser (3 spaces):"
+    p "Enter the squares for your Submarine (3 spaces):"
     until @player_board.place(Ship.new("Cruiser", 3),convert_input_to_coords )
       p "Those are invalid coordinates. Please try again:"
       p "Enter the squares for the Cruiser (3 spaces):"
     end
-    print @player_board.render(true)
 
-    p "Enter the squares for the Submarine (2 spaces):"
+    p "Enter the squares for your Cruiser (2 spaces):"
     until @player_board.place(Ship.new("Submarine",2), convert_input_to_coords)
       p "Those are invalid coordinates. Please try again:"
     end
-    print @player_board.render(true)
+    render_playspace
+    p "Now that we've placed our ships, lets start the game!"
+    sleep 5
   end
 
   def feedback(board, coord)
     if !board.cells[coord].empty?
       if board.cells[coord].ship.sunk?
-        "Sunk!"
+        :sunk
       else
-        "Hit!"
+        :hit
       end
     else
-      "Miss!"
+      :missed
     end
   end
 
@@ -80,9 +99,20 @@ class Game
     until !@player_board.cells[coord].fired_upon?
      coord = valid_range.shift
     end
+    puts "Now it's my turn!"
     @player_board.cells[coord].fire_upon
-    puts feedback(@player_board, coord)
-    sleep(0.5)
+    sleep 2
+    render_playspace
+    case feedback(@player_board, coord)
+    when :hit
+      p "I hit one of your ships!"
+    when :missed
+      p "I Missed!"
+    when :sunk
+      p "I Sunk your #{@player_board.cells[coord].ship.name}!"
+    end
+    sleep(2)
+    render_playspace
   end
 
   def attempt_fire_on_computer_ship
@@ -90,18 +120,29 @@ class Game
     coord = ''
     until is_valid_coordinate
       coord = gets.chomp.upcase
-      is_valid_coordinate = @computer_board.valid_coordinate?(coord)
+      is_valid_coordinate = @computer_board.valid_coordinate?(coord) && !@computer_board.cells[coord].fired_upon?
       print "Please enter valid coordinates: " if !is_valid_coordinate
     end
     @computer_board.cells[coord].fire_upon
-    puts feedback(@computer_board, coord)
-    sleep(0.5)
+    render_playspace
+    case feedback(@computer_board, coord)
+    when :hit
+      p "You Hit one of my ships!"
+    when :missed
+      p "You Missed!"
+    when :sunk
+      p "You Sunk my #{@computer_board.cells[coord].ship.name}!"
+    end
+    sleep(2)
+
   end
 
   def take_turn
     print "Enter the coordinate for your shot: "
 
     attempt_fire_on_computer_ship
+    render_playspace
+    sleep 1
     attempt_fire_on_player_ship
   end
 
@@ -128,12 +169,7 @@ class Game
 
   def play_game
     until @game_over
-      system("clear")
-      print "#{'=' * 10 } COMPUTER BOARD #{'=' * 10} \n"
-      print @computer_board.render
-
-      print "#{'=' * 10 } PLAYER BOARD #{'=' * 10} \n"
-      print @player_board.render(true)
+      render_playspace
 
       take_turn
       check_if_game_over
