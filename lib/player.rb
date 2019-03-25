@@ -17,8 +17,8 @@ class Player
   end
 
   def fire_upon?(player, coord)
-    good_coord =  @board.valid_coordinate?(coord) &&
-                  !@board.cells[coord].fired_upon?
+    good_coord =  player.board.valid_coordinate?(coord) &&
+                  !player.board.cells[coord].fired_upon?
 
     player.receive_fire(coord) if good_coord
 

@@ -13,10 +13,10 @@ class AI < Player
   end
 
   def fire_on_enemy_ship
-    valid_range = @enemy.board.cells.keys.shuffle!
+    valid_range = @enemy.board.cells.keys.shuffle
     coord = valid_range.shift
 
-    until !fire_upon?(@enemy, coord)
+    until fire_upon?(@enemy, coord)
       coord = valid_range.shift
     end
     @last_coord_fired_on = coord
