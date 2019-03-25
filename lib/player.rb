@@ -29,4 +29,7 @@ class Player
     @board.cells[coord].fire_upon
   end
 
+  def ship_name(coord)
+    @board.cells[coord].ship.name
+  end
 end

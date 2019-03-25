@@ -133,7 +133,7 @@ class Game
     when :missed
       p "You Missed!"
     when :sunk
-      p "You Sunk my #{@computer.cells[coord].ship.name}!"
+      p "You Sunk my #{@computer.ship_name(coord)}!"
     end
     sleep(2)
 

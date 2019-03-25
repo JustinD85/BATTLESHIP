@@ -26,4 +26,9 @@ class PlayerTest < MiniTest::Test
     assert computer.fire_upon?(player, "A1")
   end
 
+  def test_it_should_be_able_to_return_ship_name
+    player.place_ship?(ship, ["A1"])
+    assert "Cruiser", player.ship_name("A1")
+  end
+
 end
