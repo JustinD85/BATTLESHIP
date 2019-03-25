@@ -55,13 +55,13 @@ class Game
     p "I'm going to lay out my ships now"
     7.times do
       print '.'
-      sleep 0.5
+      sleep(0.5)
     end
     puts 'Done!'
-    sleep 1
+    sleep(1)
     p "You now need to lay out your ships"
     p "Remember: The Submarine is three units long and the Cruiser is two units long."
-    sleep 3
+    sleep(3)
     p "Here's what your board will look like:"
     print @player_board.render
 
@@ -70,6 +70,7 @@ class Game
       p "Those are invalid coordinates. Please try again:"
       p "Enter the squares for the Cruiser (3 spaces):"
     end
+    print @player_board.render(true)
 
     p "Enter the squares for your Cruiser (2 spaces):"
     until @player_board.place(Ship.new("Submarine",2), convert_input_to_coords)
@@ -77,7 +78,7 @@ class Game
     end
     render_playspace
     p "Now that we've placed our ships, lets start the game!"
-    sleep 5
+    sleep(5)
   end
 
   def feedback(board, coord)
@@ -99,10 +100,9 @@ class Game
     until !@player_board.cells[coord].fired_upon?
      coord = valid_range.shift
     end
-    puts "Now it's my turn!"
     @player_board.cells[coord].fire_upon
-    sleep 2
     render_playspace
+    sleep(0.5)
     puts "I #{feedback(@player_board, coord).to_s} your ship"
     sleep(2)
     render_playspace
@@ -128,7 +128,7 @@ class Game
 
     attempt_fire_on_computer_ship
     render_playspace
-    sleep 1
+    sleep(1)
     attempt_fire_on_player_ship
   end
 
@@ -144,13 +144,23 @@ class Game
     @game_over = true if player_won || computer_won
 
     if player_won && computer_won
-      p "It's tie"
+      p "=" * 15 + "Game Over!" + "=" * 15
+      p "It's tie!"
+      sleep(6)
     elsif player_won
-      p "Player won"
+      p "=" * 15 + "Game Over!" + "=" * 15
+      p "Player won!"
+      sleep(6)
     elsif computer_won
-      p "Computer won"
+      p "=" * 15 + "Game Over!" + "=" * 15
+      p "Computer won!"
+      sleep(6)
     end
+  end
 
+  def restart_game
+    @game_over = false
+    start
   end
 
   def play_game
@@ -160,20 +170,23 @@ class Game
       take_turn
       check_if_game_over
     end
-    print "Game Over"
+    restart_game
   end
 
   def start
     system("clear")
-    p "Welcome to BattleShip"
-      p "Enter p to play. Enter q to quit."
-      case gets.chomp
-      when "q"
-        @game_over = true
-      when "p"
+    p "Welcome to BattleShip!"
+    input = ''
+    until input == "p" || input == "q"
+      p "Please enter p to play a game, or q to quit"
+      input = gets.chomp.downcase
+      if input == 'p'
         computer_placement
         player_placement
         play_game
+      elsif input == 'q'
+        exit
       end
+    end
   end
 end
