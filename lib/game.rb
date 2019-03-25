@@ -108,9 +108,12 @@ class Game
     print "Enter the coordinate for your shot: "
 
     attempt_fire_on_computer_ship
+    check_if_game_over
+    return if @game_over
     render_playspace
     sleep(1)
     attempt_fire_on_player_ship
+    check_if_game_over
   end
 
   def check_if_game_over
@@ -142,7 +145,6 @@ class Game
     until @game_over
       render_playspace
       take_turn
-      check_if_game_over
     end
     restart_game
   end
