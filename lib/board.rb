@@ -1,5 +1,4 @@
 require './lib/cell'
-require 'pry'
 
 class Board
   attr_reader :cells
@@ -11,7 +10,7 @@ class Board
 
   def populate_with_cells(range)
     @max_board_size = range.last.scan(/\d+/).join.to_i
-    
+
     valid_range = range.select do |coords|
       coord_num = coords.scan(/\d+/).join.to_i
        coord_num <= @max_board_size  && coord_num != 0

@@ -1,6 +1,4 @@
 require './lib/ship'
-require './lib/cell'
-require './lib/board'
 require './lib/player'
 require './lib/ai'
 
@@ -151,25 +149,27 @@ class Game
       number = gets.chomp.to_i
     end
 
-    board_range = letters.slice(number - 1) + number.to_s
+    number = "0" + number.to_s if number < 10
+    board_range = letters.slice(number.to_i - 1) + number
+
     @player = Player.new(board_range)
     @computer = AI.new(board_range)
+    system "clear"
   end
 
   def start
     system("clear")
 
-    p "Welcome to BattleShip! \n"
-    input = ''
-
-    until input == "p" || input == "q"
-      puts "Please enter: \n p to play a game \n q to quit \n a to adjust board size \n"
+     while true
+       print "Welcome to BattleShip! \n \n"
+       input = ''
+      print "Please enter: \n p to play a game \n q to quit \n a to adjust board size \n >: "
       input = gets.chomp.downcase
       if input == 'p'
         play_game
       elsif input == 'q'
         exit
-      elsif 'a'
+      elsif input == 'a'
         adjust_board_size
       end
     end
