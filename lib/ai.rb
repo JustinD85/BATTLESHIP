@@ -2,8 +2,8 @@ require './lib/player'
 
 class AI < Player
 
-  def initialize
-    super
+  def initialize(board_size = "S19")
+    super(board_size)
   end
 
 

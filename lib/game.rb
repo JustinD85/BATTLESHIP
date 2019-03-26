@@ -27,17 +27,8 @@ class Game
   end
 
   def convert_input_to_coords
-    valid_coord = false
-
-    until valid_coord
-      coords = gets.chomp.split
- 
-      if (coords.all? { |coord| coord.split("").length == 2 })
-        return coords.map { |coord| coord.upcase}
-      else
-        print "Please enter valid coordinates! \n"
-      end
-    end
+      coords = gets.chomp
+      coords.upcase.split
   end
 
   def player_placement
@@ -150,19 +141,36 @@ class Game
     restart_game
   end
 
+  def adjust_board_size
+    letters = ("A".."Z").to_a
+    system "clear"
+    puts "Please enter a number lower than 26"
+    number = gets.chomp.to_i
+
+    until number < 26
+      number = gets.chomp.to_i
+    end
+
+    board_range = letters.slice(number - 1) + number.to_s
+    @player = Player.new(board_range)
+    @computer = AI.new(board_range)
+  end
+
   def start
     system("clear")
 
-    p "Welcome to BattleShip!"
+    p "Welcome to BattleShip! \n"
     input = ''
 
     until input == "p" || input == "q"
-      p "Please enter p to play a game, or q to quit"
+      puts "Please enter: \n p to play a game \n q to quit \n a to adjust board size \n"
       input = gets.chomp.downcase
       if input == 'p'
         play_game
       elsif input == 'q'
         exit
+      elsif 'a'
+        adjust_board_size
       end
     end
   end
