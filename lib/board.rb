@@ -3,15 +3,14 @@ require './lib/cell'
 class Board
   attr_reader :cells
 
-  def initialize(range = "A1".."D4")
+  def initialize(range = "A1".."I9")
+    @max_board_size = 0
     @cells = populate_with_cells(range)
-    @max_board_size = 4
-  end
+     end
 
   def populate_with_cells(range)
     @max_board_size = range.max_by { |coords| coords }[1].to_i
-
-    valid_range = range.select do |coords|
+     valid_range = range.select do |coords|
        coords[1].to_i <= @max_board_size  && !coords.include?("0")
     end
 
@@ -67,10 +66,10 @@ class Board
 
   def render(show_ship = false)
     board = " "
-    letter_arr = ("A".."Z").to_a.slice(0,@max_board_size)
+    letter_arr = ("A".."Z").to_a.slice(0, @max_board_size)
 
     @max_board_size.times { |num| board += " #{num + 1}" }
-
+ 
     @cells.values.each_with_index do |cell, i|
 
       board << " \n" << letter_arr.shift if i % @max_board_size  == 0
