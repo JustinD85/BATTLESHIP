@@ -26,12 +26,12 @@ class Game
     @computer.theorize_and_place_ships(ships)
   end
 
-  def convert_input_to_coords()
+  def convert_input_to_coords
     valid_coord = false
 
     until valid_coord
       coords = gets.chomp.split
-
+ 
       if (coords.all? { |coord| coord.split("").length == 2 })
         return coords.map { |coord| coord.upcase}
       else
@@ -80,7 +80,7 @@ class Game
     render_playspace
 
     sleep(0.5)
-    puts "I #{@computer.survey_battlefield} your ship"
+    puts @computer.survey_battlefield
     sleep(2)
 
     render_playspace
@@ -89,7 +89,7 @@ class Game
   def attempt_fire_on_computer_ship
     coord = gets.chomp.upcase
 
-    until @player.fire_upon?(@computer, coord)
+    until @player.fire_upon?(coord)
 
       if @computer.already_shot_at_location?(coord)
           print "You've already shot there. Please enter another coordinate: "
@@ -100,7 +100,7 @@ class Game
     end
 
     render_playspace
-    puts "You #{@computer.status_of_cell(coord)} my ship"
+    puts @player.survey_battlefield
     sleep(2)
   end
 
@@ -142,6 +142,7 @@ class Game
     computer_placement
     player_placement
     @computer.acquire_enemy(@player)
+    @player.acquire_enemy(@computer)
     until @game_over
       render_playspace
       take_turn

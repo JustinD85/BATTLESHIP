@@ -6,6 +6,12 @@ class Player
   def initialize
     @board =  Board.new
     @guesses = []
+    @enemy = ""
+    @last_coord_fired_on = ""
+  end
+
+  def acquire_enemy(enemy)
+    @enemy = enemy
   end
 
   def show_board(show_ship = false)
@@ -16,12 +22,12 @@ class Player
     @board.place(ship, coords)
   end
 
-  def fire_upon?(player, coord)
-    good_coord =  player.board.valid_coordinate?(coord) &&
-                  !player.board.cells[coord].fired_upon?
+  def fire_upon?(coord)
+    good_coord =  @enemy.board.valid_coordinate?(coord) &&
+                  !@enemy.board.cells[coord].fired_upon?
 
-    player.receive_fire(coord) if good_coord
-
+    @enemy.receive_fire(coord) if good_coord
+    @last_coord_fired_on = coord if good_coord
     good_coord
   end
 
@@ -33,15 +39,20 @@ class Player
     @board.cells[coord].ship.name
   end
 
+  def survey_battlefield
+    "Your shot on " +  @last_coord_fired_on + " was a " +
+      @enemy.status_of_cell(@last_coord_fired_on)
+  end
+
   def status_of_cell(coord)
     cell = @board.cells[coord]
 
     if !cell.empty? && cell.ship.sunk?
-      :sunk
+      "sunk"
     elsif !cell.empty?
-      :hit
+      "hit"
     else
-      :missed
+      "miss"
     end
 
   end
@@ -52,6 +63,10 @@ class Player
 
   def already_shot_at_location?(coord)
     @board.valid_coordinate?(coord) && @board.cells[coord].fired_upon?
+  end
+
+  def report_sunken_vessel
+    @enemy.board.cells[@last_coord_fired_on].ship.name
   end
 
 end
