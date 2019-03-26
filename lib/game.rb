@@ -150,7 +150,7 @@ class Game
     end
 
     number = "0" + number.to_s if number < 10
-    board_range = letters.slice(number.to_i - 1) + number
+    board_range = letters.slice(number.to_i - 1) + number.to_s
 
     @player = Player.new(board_range)
     @computer = AI.new(board_range)
