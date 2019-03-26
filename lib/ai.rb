@@ -2,21 +2,16 @@ require './lib/player'
 
 class AI < Player
 
-  def initialize
-    super
-    @enemy = ""
-    @last_coord_fired_on = ""
+  def initialize(board_size = "S19")
+    super(board_size)
   end
 
-  def acquire_enemy(enemy)
-    @enemy = enemy
-  end
 
   def fire_on_enemy_ship
     valid_range = @enemy.board.cells.keys.shuffle
     coord = valid_range.shift
 
-    until fire_upon?(@enemy, coord)
+    until fire_upon?(coord)
       coord = valid_range.shift
     end
     @last_coord_fired_on = coord
@@ -40,11 +35,8 @@ class AI < Player
   end
 
   def survey_battlefield
-    @enemy.status_of_cell(@last_coord_fired_on)
-  end
-
-  def report_sunken_vessel
-    @enemy.board.cells[@last_coord_fired_on].ship.name
+    "My shot on " + @last_coord_fired_on + " was a " +
+      @enemy.status_of_cell(@last_coord_fired_on)
   end
 
 end

@@ -9,6 +9,8 @@ class PlayerTest < MiniTest::Test
   def setup
     @player = Player.new
     @computer = Player.new
+    @player.acquire_enemy(@computer)
+    @computer.acquire_enemy(@player)
     @ship = Ship.new("Cruiser", 1)
   end
 
@@ -23,7 +25,7 @@ class PlayerTest < MiniTest::Test
 
   def test_it_should_be_able_to_fire_upon_ship
     player.place_ship?(ship, ["A1"])
-    assert computer.fire_upon?(player, "A1")
+    assert computer.fire_upon?("A1")
   end
 
   def test_it_should_be_able_to_return_ship_name

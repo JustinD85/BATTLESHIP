@@ -3,25 +3,28 @@ require './lib/cell'
 class Board
   attr_reader :cells
 
-  def initialize(range = "A1".."D4")
+  def initialize(range)
+    @max_board_size = 0
     @cells = populate_with_cells(range)
-    @max_board_size = 4
   end
 
   def populate_with_cells(range)
-    @max_board_size = range.max_by { |coords| coords }[1].to_i
+    @max_board_size = range.last.scan(/\d+/).join.to_i
 
     valid_range = range.select do |coords|
-       coords[1].to_i <= @max_board_size  && !coords.include?("0")
+      coord_num = coords.scan(/\d+/).join.to_i
+       coord_num <= @max_board_size  && coord_num != 0
     end
-
+    formatted_range = valid_range.map do |coord|
+     coord.chr + coord.scan(/\d+/).join.to_i.to_s
+    end
     board_hash = {}
-    valid_range.each { |coords| board_hash[coords] = Cell.new(coords) }
+    formatted_range.each { |coords| board_hash[coords] = Cell.new(coords) }
     board_hash
   end
 
-  def valid_coordinate?(coords)
-    @cells.any? { |key, value| key == coords }
+  def valid_coordinate?(coord)
+    @cells.any? { |key, value| key == coord }
   end
 
   def valid_horizontal_placement?(coords)
@@ -67,14 +70,17 @@ class Board
 
   def render(show_ship = false)
     board = " "
-    letter_arr = ("A".."Z").to_a.slice(0,@max_board_size)
+    letter_arr = ("A".."Z").to_a.slice(0, @max_board_size)
 
-    @max_board_size.times { |num| board += " #{num + 1}" }
-
+    @max_board_size.times do |num|
+      board += "  #{num + 1}" if num < 10
+      board += " #{num + 1}" if num >= 10
+    end
+ 
     @cells.values.each_with_index do |cell, i|
 
       board << " \n" << letter_arr.shift if i % @max_board_size  == 0
-      board << " "
+      board << "  "
       board << cell.render(show_ship)
     end
     board << " \n"

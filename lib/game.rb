@@ -1,6 +1,4 @@
 require './lib/ship'
-require './lib/cell'
-require './lib/board'
 require './lib/player'
 require './lib/ai'
 
@@ -26,18 +24,9 @@ class Game
     @computer.theorize_and_place_ships(ships)
   end
 
-  def convert_input_to_coords()
-    valid_coord = false
-
-    until valid_coord
-      coords = gets.chomp.split
-
-      if (coords.all? { |coord| coord.split("").length == 2 })
-        return coords.map { |coord| coord.upcase}
-      else
-        print "Please enter valid coordinates! \n"
-      end
-    end
+  def convert_input_to_coords
+      coords = gets.chomp
+      coords.upcase.split
   end
 
   def player_placement
@@ -80,7 +69,7 @@ class Game
     render_playspace
 
     sleep(0.5)
-    puts "I #{@computer.survey_battlefield} your ship"
+    puts @computer.survey_battlefield
     sleep(2)
 
     render_playspace
@@ -89,7 +78,7 @@ class Game
   def attempt_fire_on_computer_ship
     coord = gets.chomp.upcase
 
-    until @player.fire_upon?(@computer, coord)
+    until @player.fire_upon?(coord)
 
       if @computer.already_shot_at_location?(coord)
           print "You've already shot there. Please enter another coordinate: "
@@ -100,7 +89,7 @@ class Game
     end
 
     render_playspace
-    puts "You #{@computer.status_of_cell(coord)} my ship"
+    puts @player.survey_battlefield
     sleep(2)
   end
 
@@ -142,6 +131,7 @@ class Game
     computer_placement
     player_placement
     @computer.acquire_enemy(@player)
+    @player.acquire_enemy(@computer)
     until @game_over
       render_playspace
       take_turn
@@ -149,19 +139,38 @@ class Game
     restart_game
   end
 
+  def adjust_board_size
+    letters = ("A".."Z").to_a
+    system "clear"
+    puts "Please enter a number lower than 26"
+    number = gets.chomp.to_i
+
+    until number < 26
+      number = gets.chomp.to_i
+    end
+
+    number = "0" + number.to_s if number < 10
+    board_range = letters.slice(number.to_i - 1) + number.to_s
+
+    @player = Player.new(board_range)
+    @computer = AI.new(board_range)
+    system "clear"
+  end
+
   def start
     system("clear")
 
-    p "Welcome to BattleShip!"
-    input = ''
-
-    until input == "p" || input == "q"
-      p "Please enter p to play a game, or q to quit"
+     while true
+       print "Welcome to BattleShip! \n \n"
+       input = ''
+      print "Please enter: \n p to play a game \n q to quit \n a to adjust board size \n >: "
       input = gets.chomp.downcase
       if input == 'p'
         play_game
       elsif input == 'q'
         exit
+      elsif input == 'a'
+        adjust_board_size
       end
     end
   end
