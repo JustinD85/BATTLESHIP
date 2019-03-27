@@ -13,7 +13,7 @@ class Game
   def render_playspace
     system("clear")
     print "#{'=' * 10 } COMPUTER BOARD #{'=' * 10} \n"
-    print @computer.show_board(true)
+    print @computer.show_board
 
     print "#{'=' * 10 } PLAYER BOARD #{'=' * 10} \n"
     print @player.show_board(true)
