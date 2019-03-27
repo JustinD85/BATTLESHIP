@@ -21,7 +21,12 @@ class Game
 
   def computer_placement
     ships = [Ship.new("Cruiser", 2), Ship.new("Submarine", 3)]
-    @computer.theorize_and_place_ships(ships)
+    ships.each do |ship|
+      until @computer.theorize_and_place_ship(ship)
+      end
+    end
+    require 'pry'
+    binding.pry
   end
 
   def convert_input_to_coords
@@ -150,7 +155,7 @@ class Game
     end
 
     number = "0" + number.to_s if number < 10
-    board_range = letters.slice(number.to_i - 1) + number.to_s
+    board_range = letters.slice(number.to_i - 1) + number
 
     @player = Player.new(board_range)
     @computer = AI.new(board_range)

@@ -27,11 +27,8 @@ class AI < Player
     new_coords
   end
 
-  def theorize_and_place_ships(ships)
-    ships.each do |ship|
-      until place_ship?(ship, coordinate_randomizer(ship))
-      end
-    end
+  def theorize_and_place_ship(ship)
+    place_ship?(ship, coordinate_randomizer(ship))
   end
 
   def survey_battlefield

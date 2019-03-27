@@ -3,7 +3,7 @@
 class Player
   attr_reader :board
 
-  def initialize(board_size = "S19")
+  def initialize(board_size = "D04")
     @board =  Board.new("A01"..board_size)
     @guesses = []
     @enemy = ""
