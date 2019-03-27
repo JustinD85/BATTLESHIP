@@ -144,10 +144,10 @@ class Game
   def adjust_board_size
     letters = ("A".."Z").to_a
     system "clear"
-    puts "Please enter a number lower than 26"
+    puts "Please enter a number lower than 10"
     number = gets.chomp.to_i
 
-    until number < 26
+    until number < 10
       number = gets.chomp.to_i
     end
 
