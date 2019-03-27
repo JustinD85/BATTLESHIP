@@ -25,8 +25,6 @@ class Game
       until @computer.theorize_and_place_ship(ship)
       end
     end
-    require 'pry'
-    binding.pry
   end
 
   def convert_input_to_coords
@@ -62,7 +60,6 @@ class Game
     end
     render_playspace
     p "Now that we've placed our ships, lets start the game!"
-    sleep(5)
   end
 
   def attempt_fire_on_player_ship

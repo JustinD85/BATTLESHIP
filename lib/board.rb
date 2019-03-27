@@ -33,11 +33,13 @@ class Board
   end
 
   def valid_vertical_placement?(coords)
-    letters_in_coords = coords.map { |coord| coord.chr }
-    letters_in_coords_using_range = (coords.first.chr..coords.last.chr).to_a
+    #numbers same
+    numbers_in_coord = coords.map { |coord| coord.scan(/\d+/).join.to_i }
+    #letters sequintial
+    letters_in_coord = coords.map { |coord| coord.chr }
+    letters_with_range = (coords.first.chr..coords.last.chr).to_a
 
-    coords.all? { |coord| coord[1] == coords.first[1] } &&
-     letters_in_coords == letters_in_coords_using_range
+    numbers_in_coord.uniq.length == 1 && letters_in_coord == letters_with_range
   end
 
   def out_of_bounds_or_has_ship_already?(coords)
