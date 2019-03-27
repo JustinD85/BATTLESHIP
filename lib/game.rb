@@ -138,6 +138,8 @@ class Game
       render_playspace
       take_turn
     end
+    @player = Player.new
+    @computer = AI.new
     restart_game
   end
 
