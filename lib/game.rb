@@ -13,15 +13,17 @@ class Game
   def render_playspace
     system("clear")
     print "#{'=' * 10 } COMPUTER BOARD #{'=' * 10} \n"
-    print @computer.show_board
+    print @computer.show_board(true)
 
     print "#{'=' * 10 } PLAYER BOARD #{'=' * 10} \n"
     print @player.show_board(true)
   end
 
   def computer_placement
-    ships = [Ship.new("Cruiser", 2), Ship.new("Submarine", 3)]
-    @computer.theorize_and_place_ships(ships)
+      until @computer.theorize_and_place_ship(Ship.new("Submarine", 3))
+      end
+      until @computer.theorize_and_place_ship(Ship.new("Cruiser", 2))
+      end
   end
 
   def convert_input_to_coords
@@ -142,10 +144,10 @@ class Game
   def adjust_board_size
     letters = ("A".."Z").to_a
     system "clear"
-    puts "Please enter a number lower than 26"
+    puts "Please enter a number lower than 10"
     number = gets.chomp.to_i
 
-    until number < 26
+    until number < 10
       number = gets.chomp.to_i
     end
 
